@@ -24,6 +24,7 @@ def enter_parking(slot, available):
             for j in range(len(slot[i])):
                 if slot[i][j] == 0:
                     print(f"Car Parked at Spot {i + 1}-{j + 1}")
+                    slot[i][j]==1
                     car_id = f"{i + 1}-{j + 1}"
                     print(f"Your Car id {car_id}")
                     return car_id
