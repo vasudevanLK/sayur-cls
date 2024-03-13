@@ -1,17 +1,24 @@
+from datetime import datetime, timedelta
+
 def initial():
     print("YOUR PARKING AREA")
-    print("------------------")
+    print("__________________")
     slot = [[0, 0, 0],
             [0, 0, 0],
             [0, 0, 0]]
+    for i in range(len(slot)):
+        for j in range(len(slot[0])):
+            print(slot[i][j],end='')
+        print()
     available = 3 * 3
     toll_coll = 0
-    print(slot)
-    print("------------------")
+    
+    print("_________________")
     return slot, available, toll_coll
 
-
-def enter_parking(slot, available):
+    
+def enter_parking(slot,available):
+    car_id=0
     count = 0
     for i in range(len(slot)):
         for j in range(len(slot[i])):
@@ -24,36 +31,50 @@ def enter_parking(slot, available):
             for j in range(len(slot[i])):
                 if slot[i][j] == 0:
                     print(f"Car Parked at Spot {i + 1}-{j + 1}")
-                    slot[i][j]==1
+                    entry_time =datetime.now()
+                    slot[i][j] = 1  # corrected assignment operator
                     car_id = f"{i + 1}-{j + 1}"
                     print(f"Your Car id {car_id}")
-                    return car_id
-
-
-def leave_parking(toll_coll, car_id):
-    if car_id != 0:
-        toll_fee = 10
+                    return car_id, entry_time  # corrected assignment of entry_time
+                    
+def time_calc(entry_time,toll_fee,toll_coll):
+    toll_fee = 10
+    exit_time=datetime.now()
+    difference = exit_time - entry_time 
+    if difference > timedelta(hours=2):
+        print("_________________")
+        print(f"Late Parking Fee:  Rs.{20} per hour")
+        toll_coll= 20
         toll_coll += toll_fee
+        return toll_fee,toll_coll
+    else:
+        toll_coll += toll_fee
+        return toll_coll,toll_fee
+        
+
+def leave_parking(toll_coll, car_id,entry_time):
+    if car_id != 0:
+        time_calc(entry_time,toll_fee,toll_coll)  # corrected function call, passing entry_time
         print("------------------")
-        print(f"Car left at {car_id} , Toll Collection: {toll_fee}")
+        print(f"Car left at {car_id} , Toll Collection: {toll_fee}")  
         print("------------------")
-        return toll_coll
+        return toll_coll, toll_fee ,entry_time 
     else:
         print("------------------")
         print("NO car found to Exit from parking ! ")
         print("------------------")
-
+        return toll_fee  ,entry_time
 
 def Tollamt(toll_coll):
     val = str(input("Are you Willing to donate (Y/N): ")).upper()
     if val == 'Y':
         donate_amt = 0
-        print("--------------------")
+        print("____________________")
         print("Your help makes a difference to save lives ")
         amt = float(input("Donation Amount: "))
         donate_amt += amt
         print(f"Your Donation amount: {donate_amt}")
-        print("--------------------")
+        print("____________________")
     else:
         print("--------------------")
         print(f"Your Total Collection on toll: {toll_coll}")
@@ -61,6 +82,8 @@ def Tollamt(toll_coll):
 
 # Main program
 slot, available, toll_coll = initial()
+car_id = None  # initializing car_id
+toll_fee=10
 
 while True:
     print("------- CAR PARKING APPLICATION---------")
@@ -77,12 +100,10 @@ while True:
         slot, available, toll_coll = initial()
         
     elif choice == 2:
-        car_id = enter_parking(slot, available)
-        
+        car_id, entry_time = enter_parking(slot, available)  
         
     elif choice == 3:
-        leave_parking = leave_parking(toll_coll, car_id)
-        
+         toll_coll, toll_fee, entry_time = leave_parking(toll_coll, car_id, entry_time) 
         
     elif choice == 4:
         Tollamt(toll_coll)
