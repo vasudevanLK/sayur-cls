@@ -1,0 +1,1 @@
+This the the is a the the sample a text passage a the a. It contains several words separated by spaces the a the the. We will use Python to read this text file and split the words by spaces, then join them with commas.
